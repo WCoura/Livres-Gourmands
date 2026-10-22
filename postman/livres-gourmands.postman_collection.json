@@ -1,0 +1,218 @@
+{
+  "info": {
+    "name": "Livres Gourmands",
+    "description": "API étape 02 — catalogue, JWT, panier, commandes simulées, listes de cadeaux, avis et commentaires.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "baseUrl", "value": "http://127.0.0.1:4721" },
+    { "key": "token", "value": "" },
+    { "key": "reference", "value": "" }
+  ],
+  "item": [
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Inscription",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{baseUrl}}/api/auth/register",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nom\": \"Martin\",\n  \"prenom\": \"Léa\",\n  \"email\": \"lea.martin@example.com\",\n  \"motDePasse\": \"Recette123\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Connexion client",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('login 200', function () { pm.response.to.have.status(200); });",
+                  "const body = pm.response.json();",
+                  "pm.collectionVariables.set('token', body.token);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{baseUrl}}/api/auth/login",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"camille.client@livresgourmands.test\",\n  \"motDePasse\": \"Camille123!\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Profil",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": "{{baseUrl}}/api/users/me"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Catalogue",
+      "item": [
+        {
+          "name": "Rechercher",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/ouvrages?texte=bouillon&populariteMin=0",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "ouvrages"],
+              "query": [
+                { "key": "texte", "value": "bouillon" },
+                { "key": "populariteMin", "value": "0" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Détail",
+          "request": { "method": "GET", "url": "{{baseUrl}}/api/ouvrages/9" }
+        },
+        {
+          "name": "Catégories",
+          "request": { "method": "GET", "url": "{{baseUrl}}/api/categories" }
+        }
+      ]
+    },
+    {
+      "name": "Panier et commande",
+      "item": [
+        {
+          "name": "Ajouter au panier",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "url": "{{baseUrl}}/api/panier/items",
+            "body": { "mode": "raw", "raw": "{\n  \"ouvrageId\": 1,\n  \"quantite\": 1\n}" }
+          }
+        },
+        {
+          "name": "Voir le panier",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": "{{baseUrl}}/api/panier"
+          }
+        },
+        {
+          "name": "Créer la commande",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "if (pm.response.code === 201) {",
+                  "  pm.collectionVariables.set('reference', pm.response.json().commande.paiement.reference);",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "url": "{{baseUrl}}/api/commandes",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"adresseLivraison\": \"12 rue des Oliviers\\n13001 Marseille\\nFrance\",\n  \"modeLivraison\": \"standard\",\n  \"modePaiement\": \"carte_simulee\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Simuler le paiement",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{baseUrl}}/api/paiements/{{reference}}/simuler",
+            "body": { "mode": "raw", "raw": "{\n  \"resultat\": \"reussi\"\n}" }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Listes, avis, atelier",
+      "item": [
+        {
+          "name": "Liste par code",
+          "request": { "method": "GET", "url": "{{baseUrl}}/api/listes/TABLE-HIVER" }
+        },
+        {
+          "name": "Avis",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "url": "{{baseUrl}}/api/ouvrages/9/avis",
+            "body": { "mode": "raw", "raw": "{\n  \"note\": 5\n}" }
+          }
+        },
+        {
+          "name": "Commentaire",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "url": "{{baseUrl}}/api/ouvrages/9/commentaires",
+            "body": { "mode": "raw", "raw": "{\n  \"contenu\": \"La pâte à crêpes est enfin tenable un mardi soir.\"\n}" }
+          }
+        },
+        {
+          "name": "Connexion éditeur",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "if (pm.response.code === 200) pm.collectionVariables.set('token', pm.response.json().token);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{baseUrl}}/api/auth/login",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"louis.editeur@livresgourmands.test\",\n  \"motDePasse\": \"Editeur123!\"\n}"
+            }
+          }
+        },
+        {
+          "name": "File des commentaires",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": "{{baseUrl}}/api/commentaires?statut=en_attente"
+          }
+        }
+      ]
+    }
+  ]
+}

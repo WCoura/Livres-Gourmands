@@ -1,0 +1,25 @@
+{
+  "name": "Livres Gourmands",
+  "short_name": "Gourmands",
+  "description": "Livres de cuisine pour débutants, amateurs et chefs.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "lang": "fr",
+  "background_color": "#f4efe6",
+  "theme_color": "#9d341f",
+  "icons": [
+    {
+      "src": "/icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ]
+}

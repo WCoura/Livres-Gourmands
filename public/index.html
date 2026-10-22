@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#9d341f">
+  <meta name="description" content="Livres Gourmands — livres de cuisine pour débutants, amateurs et chefs.">
+  <title>Livres Gourmands</title>
+  <link rel="icon" href="/icons/icon-192.png">
+  <link rel="manifest" href="/manifest.webmanifest">
+  <link rel="apple-touch-icon" href="/icons/icon-192.png">
+  <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+  <a class="skip" href="#contenu">Aller au contenu</a>
+  <header class="site-header">
+    <div class="header-bar">
+      <a class="brand" href="/">
+        <span class="seal" aria-hidden="true">LG</span>
+        <span>
+          <span class="brand-name">Livres Gourmands</span>
+          <span class="brand-tag">Cuisine, du premier couteau au dernier service</span>
+        </span>
+      </a>
+      <button type="button" class="menu-button" id="menu" aria-expanded="false" aria-controls="nav">Menu</button>
+      <nav id="nav" class="nav">
+        <a href="/">Catalogue</a>
+        <a href="/listes">Listes cadeaux</a>
+        <a href="/atelier" data-slot="atelier" hidden>Atelier</a>
+        <a href="/panier" class="cart-link">Panier <span id="panier-count">0</span></a>
+        <span id="compte-slot"></span>
+      </nav>
+    </div>
+    <form class="search" id="recherche" role="search">
+      <label class="sr-only" for="q">Rechercher un livre</label>
+      <input id="q" name="texte" type="search" placeholder="Titre, auteur, ISBN…" autocomplete="off">
+      <button type="submit">Chercher</button>
+    </form>
+  </header>
+  <div id="banniere" class="banner" hidden></div>
+  <main id="contenu" tabindex="-1"></main>
+  <footer class="site-footer">
+    <p>Livres Gourmands vend des livres de cuisine pour débutants, amateurs et chefs. Le paiement est simulé : aucun numéro de carte n'est demandé ni enregistré.</p>
+  </footer>
+  <noscript>
+    <p class="state">Activez JavaScript pour parcourir le catalogue, le panier et votre compte.</p>
+  </noscript>
+  <script type="module" src="/js/app.js"></script>
+</body>
+</html>
